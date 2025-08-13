@@ -24,7 +24,7 @@ Make sure you have Rust installed ([Install Rust](https://www.rust-lang.org/tool
 Clone this repository and install dependencies:
 
 ```bash
-git clone https://github.com/your-username/hex-dump-rust.git
+git clone https://github.com/diodemusic/hex-dump-rust.git
 cd hex-dump
 cargo build
 ````
