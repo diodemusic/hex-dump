@@ -55,7 +55,7 @@ Output:
 
 - [`colored`](https://crates.io/crates/colored) – For terminal colors.
 
-Add to `Cargo.toml`:
+Install `colored`:
 
 ```bash
 cargo add colored
