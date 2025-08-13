@@ -47,7 +47,7 @@ cargo run -- bee_movie.txt
 
 Output:
 
-![Hex dump screenshot] (example.png "Hex dump screenshot")
+![Hex dump screenshot](example.png "Hex dump screenshot")
 
 ---
 
