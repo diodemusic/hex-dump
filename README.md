@@ -17,7 +17,7 @@ It reads a file's raw bytes and prints them in a structured hex + ASCII table.
 
 Make sure you have Rust installed ([Install Rust](https://www.rust-lang.org/tools/install)).
 
-Clone this repository and install dependencies:
+Clone this repository:
 
 ```bash
 git clone https://github.com/diodemusic/hex-dump.git
@@ -37,7 +37,7 @@ cargo run -- <filename>
 
 ---
 
-Example:
+## 📄 Example
 
 ```bash
 cargo run -- bee_movie.txt
