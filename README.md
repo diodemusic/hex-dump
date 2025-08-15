@@ -5,6 +5,18 @@ It reads a file's raw bytes and prints them in a structured hex + ASCII table.
 
 ---
 
+## 📄 Example
+
+```bash
+cargo run -- bee_movie.txt
+```
+
+Output:
+
+![Hex dump screenshot](example.png "Hex dump screenshot")
+
+---
+
 ## ✨ Features
 
 - **Hex + ASCII display** side-by-side.
@@ -34,17 +46,3 @@ Run with:
 ```bash
 cargo run -- <filename>
 ```
-
----
-
-## 📄 Example
-
-```bash
-cargo run -- bee_movie.txt
-```
-
-Output:
-
-![Hex dump screenshot](example.png "Hex dump screenshot")
-
----
