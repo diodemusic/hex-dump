@@ -1,4 +1,3 @@
-use colored::*;
 use std::{env, fs, process};
 
 fn get_filename() -> String {
@@ -19,74 +18,51 @@ fn get_bytes(filename: String) -> std::io::Result<Vec<u8>> {
     Ok(bytes)
 }
 
-fn get_header() {
-    let mut count: u8 = 0;
-    print!("          ");
-    for i in 0..16 {
-        print!("{} ", format!("{:02x}", i).cyan());
-
-        if count == 7 {
-            print!(" ");
-        }
-
-        count += 1;
-    }
-    println!();
-    print!("          {}", "-".repeat(23).blue());
-    println!("  {}", "-".repeat(23).blue());
-}
-
 fn hex_dump(bytes: Vec<u8>) {
+    let mut body = String::new();
+
+    // Header
+    body.push_str("          ");
+    for i in 0..16 {
+        body.push_str(&format!("{:02x} ", i));
+        if i == 7 {
+            body.push(' ');
+        }
+    }
+    body.push('\n');
+    body.push_str("          ");
+    body.push_str(&"-".repeat(23));
+    body.push_str("  ");
+    body.push_str(&"-".repeat(23));
+    body.push('\n');
+
+    // Body
     for (i, chunk) in bytes.chunks(16).enumerate() {
-        let mut count: i32 = 0;
+        body.push_str(&format!("{:08x} ", i * 16));
 
-        print!("{}", format!("{:08x} ", i * 16).cyan());
-
-        for &b in chunk {
-            if b.is_ascii_graphic() {
-                print!("{}", format!(" {:02x}", b).green());
-            } else if b == b' ' {
-                print!("{}", format!(" {:02x}", b).dimmed());
+        for j in 0..16 {
+            if j < chunk.len() {
+                body.push_str(&format!(" {:02x}", chunk[j]));
             } else {
-                print!("{}", format!(" {:02x}", b).red());
+                body.push_str("   ");
             }
-
-            if count == 7 {
-                print!(" ");
-            }
-
-            count += 1;
-        }
-
-        if chunk.len() < 16 {
-            if chunk.len() < 8 {
-                print!(" ");
-            }
-            for _ in 0..16 - chunk.len() {
-                print!("   ");
+            if j == 7 {
+                body.push(' ');
             }
         }
 
-        print!("{}", format!("  | ").blue());
+        body.push_str("  | ");
         for &b in chunk {
-            if b.is_ascii_graphic() {
-                print!("{}", format!("{}", b as char).green());
-            } else if b == b' ' {
-                print!("{}", ".".dimmed());
-            } else {
-                print!("{}", ".".red());
-            }
+            let c = if b.is_ascii_graphic() { b as char } else { '.' };
+            body.push(c);
         }
-
-        if chunk.len() < 16 {
-            for _ in 0..16 - chunk.len() {
-                print!(" ");
-            }
+        for _ in chunk.len()..16 {
+            body.push(' ');
         }
-
-        println!("{}", format!(" |").blue());
+        body.push_str(" |\n");
     }
 
+    print!("{}", body);
     println!("Read {} bytes.", bytes.len());
 }
 
@@ -94,7 +70,6 @@ fn main() {
     let start: std::time::Instant = std::time::Instant::now();
     let filename: String = get_filename();
     let bytes: Vec<u8> = get_bytes(filename).expect("Error.");
-    get_header();
     hex_dump(bytes);
     println!("Finished in {:.2?}", start.elapsed());
 }
