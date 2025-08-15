@@ -35,6 +35,8 @@ Run with:
 cargo run -- <filename>
 ```
 
+---
+
 Example:
 
 ```bash
