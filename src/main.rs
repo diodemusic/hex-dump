@@ -71,5 +71,5 @@ fn main() {
     let filename: String = get_filename();
     let bytes: Vec<u8> = get_bytes(filename).expect("Error.");
     hex_dump(bytes);
-    println!("Finished in {:.2?}", start.elapsed());
+    println!("Finished in {:.2?}.", start.elapsed());
 }
