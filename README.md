@@ -1,17 +1,13 @@
 # Hex Dump CLI Tool
 
-A simple colored hex dump CLI tool written in Rust.  
-It reads a file's raw bytes and prints them in a structured hex + ASCII table, with color-coded output.
+A simple hex dump CLI tool written in Rust.  
+It reads a file's raw bytes and prints them in a structured hex + ASCII table.
 
 ---
 
 ## ✨ Features
 
 - **Hex + ASCII display** side-by-side.
-- **Color-coded bytes**:
-  - **Green**: Printable ASCII characters.
-  - **Dimmed gray**: Spaces.
-  - **Red**: Non-printable characters.
 - **Aligned offsets** for easy navigation.
 - **Groups of 8 bytes** separated for clarity.
 
@@ -48,17 +44,5 @@ cargo run -- bee_movie.txt
 Output:
 
 ![Hex dump screenshot](example.png "Hex dump screenshot")
-
----
-
-## 🛠 Dependencies
-
-- [`colored`](https://crates.io/crates/colored) – For terminal colors.
-
-Install `colored`:
-
-```bash
-cargo add colored
-```
 
 ---
