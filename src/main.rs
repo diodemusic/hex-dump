@@ -19,6 +19,8 @@ fn get_bytes(filename: String) -> std::io::Result<Vec<u8>> {
 }
 
 fn hex_dump(bytes: Vec<u8>) {
+    println!("Reading {} bytes...", bytes.len());
+
     let mut body = String::new();
 
     // Header
