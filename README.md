@@ -1,7 +1,6 @@
 # Hex Dump CLI Tool
 
-A simple hex dump CLI tool written in Rust.
-It reads a file's raw bytes and prints them in a structured hex + optional ASCII table.
+Read a file's raw bytes and prints them in a structured hex + optional ASCII table.
 
 ---
 
