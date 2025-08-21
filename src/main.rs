@@ -1,75 +1,100 @@
-use std::{env, fs, process};
+use clap::Parser;
+use std::{fs, io};
 
-fn get_filename() -> String {
-    let args: Vec<String> = env::args().collect();
+#[derive(Parser)]
+#[command(name = "dump", about = "Dump the contents of a file as hex bytes")]
+struct Cli {
+    filename: String,
+    #[arg(long, short, default_value_t = 16)]
+    width: usize,
 
-    if args.len() != 2 {
-        println!("Usage: cargo run -- <filename>");
-        process::exit(1);
-    }
+    #[arg(long, short)]
+    limit: usize,
 
-    let filename: String = args[1].to_string();
+    #[arg(long, name = "no-ascii")]
+    no_ascii: bool,
 
-    filename
+    #[arg(long, name = "no-header")]
+    no_header: bool,
+
+    #[arg(long, name = "no-columns")]
+    no_columns: bool,
 }
 
-fn get_bytes(filename: String) -> std::io::Result<Vec<u8>> {
-    let bytes: Vec<u8> = fs::read(filename)?;
-    Ok(bytes)
-}
+fn main() -> io::Result<()> {
+    let cli = Cli::parse();
+    let start: std::time::Instant = std::time::Instant::now();
+    let bytes: Vec<u8> = fs::read(cli.filename)?;
 
-fn hex_dump(bytes: Vec<u8>) {
-    let mut body = String::new();
+    if !cli.no_header {
+        let mut header = String::from("          ");
 
-    // Header
-    body.push_str("          ");
-    for i in 0..16 {
-        body.push_str(&format!("{:02x} ", i));
-        if i == 7 {
-            body.push(' ');
+        for i in 0..cli.width {
+            header.push_str(&format!("{:02x} ", i));
+
+            if i % 8 == 7 {
+                header.push(' ');
+            }
         }
+
+        header.push_str("\n          ");
+
+        for i in 0..cli.width {
+            header.push_str("---");
+
+            if i % 8 == 7 {
+                header.push(' ');
+            }
+        }
+
+        println!("{}", header);
     }
-    body.push('\n');
-    body.push_str("          ");
-    body.push_str(&"-".repeat(23));
-    body.push_str("  ");
-    body.push_str(&"-".repeat(23));
-    body.push('\n');
 
-    // Body
-    for (i, chunk) in bytes.chunks(16).enumerate() {
-        body.push_str(&format!("{:08x} ", i * 16));
+    for (i, chunk) in bytes.chunks(cli.width).enumerate() {
+        let mut body = String::new();
 
-        for j in 0..16 {
+        if !cli.no_columns {
+            body.push_str(&format!("{:08x}: ", i * cli.width));
+        }
+
+        for j in 0..cli.width {
             if j < chunk.len() {
-                body.push_str(&format!(" {:02x}", chunk[j]));
+                body.push_str(&format!("{:02x} ", chunk[j]));
             } else {
                 body.push_str("   ");
             }
-            if j == 7 {
+
+            if j % 8 == 7 {
                 body.push(' ');
             }
         }
 
-        body.push_str("  | ");
-        for &b in chunk {
-            let c = if b.is_ascii_graphic() { b as char } else { '.' };
-            body.push(c);
+        if !cli.no_ascii {
+            body.push_str(" | ");
+
+            for &b in chunk {
+                let c: char = if b.is_ascii_graphic() {
+                    b as char
+                } else if b == b' ' {
+                    ' '
+                } else {
+                    '.'
+                };
+                body.push(c);
+            }
+
+            for _ in chunk.len()..cli.width {
+                body.push(' ');
+            }
+
+            body.push_str(" |");
         }
-        for _ in chunk.len()..16 {
-            body.push(' ');
-        }
-        body.push_str(" |\n");
+
+        println!("{}", body);
     }
 
-    print!("{}", body);
     println!("Read {} bytes.", bytes.len());
-}
-
-fn main() {
-    let start: std::time::Instant = std::time::Instant::now();
-    let filename: String = get_filename();
-    let bytes: Vec<u8> = get_bytes(filename).expect("Error.");
-    hex_dump(bytes);
     println!("Finished in {:.2?}.", start.elapsed());
+
+    Ok(())
 }
