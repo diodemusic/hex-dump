@@ -19,6 +19,9 @@ struct Cli {
 
     #[arg(long, name = "no-columns")]
     no_columns: bool,
+
+    #[arg(long, short)]
+    quiet: bool,
 }
 
 fn main() -> io::Result<()> {
@@ -97,8 +100,10 @@ fn main() -> io::Result<()> {
         println!("{}", body);
     }
 
-    println!("Read {} bytes.", bytes.len());
-    println!("Finished in {:.2?}.", start.elapsed());
+    if !cli.quiet {
+        println!("Read {} bytes.", bytes.len());
+        println!("Finished in {:.2?}.", start.elapsed());
+    }
 
     Ok(())
 }
