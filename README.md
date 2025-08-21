@@ -1,7 +1,7 @@
 # Hex Dump CLI Tool
 
-A simple hex dump CLI tool written in Rust.  
-It reads a file's raw bytes and prints them in a structured hex + ASCII table.
+A simple hex dump CLI tool written in Rust.
+It reads a file's raw bytes and prints them in a structured hex + optional ASCII table.
 
 ---
 
@@ -19,9 +19,11 @@ Output:
 
 ## ✨ Features
 
-- **Hex + ASCII display** side-by-side.
-- **Aligned offsets** for easy navigation.
+- **Hex + ASCII display** side-by-side (toggleable).
+- **Aligned offsets** for easy navigation (can be hidden).
+- **Configurable width** (default: 16 bytes per row).
 - **Groups of 8 bytes** separated for clarity.
+- **Optional header** showing byte positions.
 
 ---
 
@@ -34,15 +36,48 @@ Clone this repository:
 ```bash
 git clone https://github.com/diodemusic/hex-dump.git
 cd hex-dump
-cargo build
-````
+```
 
 ---
 
 ## ▶ Usage
 
-Run with:
+Basic usage:
 
 ```bash
 cargo run -- <filename>
 ```
+
+### Options
+
+| Flag / Option     | Description                             | Default      |
+| ----------------- | --------------------------------------- | ------------ |
+| `<filename>`      | File to read and dump.                  |              |
+| `-w, --width <N>` | Number of bytes per row.                | `16`         |
+| `--no-ascii`      | Hide the ASCII column.                  | show ASCII   |
+| `--no-header`     | Hide the header row and separator line. | show header  |
+| `--no-columns`    | Hide the left-hand offset column.       | show offsets |
+
+---
+
+### Examples
+
+Dump with 8 bytes per row:
+
+```bash
+cargo run -- bee_movie.txt --width 8
+```
+
+Hex only (no ASCII):
+
+```bash
+cargo run -- bee_movie.txt --no-ascii
+```
+
+Minimal mode (just hex, no offsets or header):
+
+```bash
+cargo run -- bee_movie.txt --no-ascii --no-columns --no-header
+```
+
+---
