@@ -8,9 +8,8 @@ struct Cli {
     #[arg(long, short, default_value_t = 16)]
     width: usize,
 
-    #[arg(long, short)]
-    limit: usize,
-
+    // #[arg(long, short)]
+    // limit: usize,
     #[arg(long, name = "no-ascii")]
     no_ascii: bool,
 
@@ -70,7 +69,7 @@ fn main() -> io::Result<()> {
         }
 
         if !cli.no_ascii {
-            body.push_str(" | ");
+            body.push_str("| ");
 
             for &b in chunk {
                 let c: char = if b.is_ascii_graphic() {
