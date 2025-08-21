@@ -22,3 +22,6 @@ target
 
 # Mac stuff
 .DS_Store
+
+# Beeg file
+bigfile.txt
