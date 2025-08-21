@@ -8,8 +8,9 @@ struct Cli {
     #[arg(long, short, default_value_t = 16)]
     width: usize,
 
-    // #[arg(long, short)]
-    // limit: usize,
+    #[arg(long, short)]
+    limit: Option<usize>,
+
     #[arg(long, name = "no-ascii")]
     no_ascii: bool,
 
@@ -23,7 +24,11 @@ struct Cli {
 fn main() -> io::Result<()> {
     let cli = Cli::parse();
     let start: std::time::Instant = std::time::Instant::now();
-    let bytes: Vec<u8> = fs::read(cli.filename)?;
+    let mut bytes: Vec<u8> = fs::read(cli.filename)?;
+
+    if let Some(limit) = cli.limit {
+        bytes.truncate(limit);
+    }
 
     if !cli.no_header {
         let mut header = String::from("          ");
